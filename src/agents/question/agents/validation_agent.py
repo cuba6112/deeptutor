@@ -14,6 +14,7 @@ project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.core.core import load_config_with_main
+from src.utils.json_utils import parse_json_response
 from src.core.logging import get_logger
 from src.tools.rag_tool import rag_search
 
@@ -181,7 +182,7 @@ class QuestionValidationAgent(BaseAgent):
             response_format={"type": "json_object"},
         )
 
-        result = json.loads(response.choices[0].message.content)
+        result = parse_json_response(response.choices[0].message.content)
         self.validation_result = result
 
         # Ensure issues and suggestions are lists

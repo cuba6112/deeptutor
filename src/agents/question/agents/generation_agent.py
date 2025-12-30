@@ -15,6 +15,7 @@ project_root = Path(__file__).parent.parent.parent.parent.parent  # DeepTutor ro
 sys.path.insert(0, str(project_root))
 
 from src.core.core import load_config_with_main
+from src.utils.json_utils import parse_json_response
 from src.core.logging import get_logger
 from src.tools.rag_tool import rag_search
 
@@ -232,7 +233,7 @@ class QuestionGenerationAgent(BaseAgent):
             level="DEBUG",
         )
 
-        question = json.loads(response_content)
+        question = parse_json_response(response_content)
         self.current_question = question
 
         # Automatically submit after generation
@@ -321,7 +322,7 @@ class QuestionGenerationAgent(BaseAgent):
             level="DEBUG",
         )
 
-        question = json.loads(response_content)
+        question = parse_json_response(response_content)
         self.current_question = question
 
         # Remove the processed feedback message

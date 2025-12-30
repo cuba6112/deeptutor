@@ -18,6 +18,7 @@ project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.core.core import get_agent_params, load_config_with_main
+from src.utils.json_utils import parse_json_response
 from src.core.logging import get_logger
 from src.tools.rag_tool import rag_search
 
@@ -316,7 +317,7 @@ Output the retrieval query directly, no additional content.
                 level="DEBUG",
             )
 
-            result = json.loads(response_content)
+            result = parse_json_response(response_content)
 
             # Ensure issues and suggestions are lists (handle case where LLM returns dict)
             issues = result.get("issues", [])
@@ -448,7 +449,7 @@ Output only the JSON, no additional text."""
                         input_tokens=input_tokens, output_tokens=output_tokens, model=self.model
                     )
 
-            result = json.loads(response_content)
+            result = parse_json_response(response_content)
 
             logger.info("Extension analysis completed")
 
@@ -569,7 +570,7 @@ Output only the JSON, no additional text."""
                 level="DEBUG",
             )
 
-            result = json.loads(response_content)
+            result = parse_json_response(response_content)
 
             relevance = result.get("relevance", "partial")
             if relevance not in ["high", "partial"]:

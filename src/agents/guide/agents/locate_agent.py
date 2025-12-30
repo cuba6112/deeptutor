@@ -4,8 +4,9 @@ LocateAgent - Agent for locating and organizing knowledge points
 Analyzes notebook content and generates progressive knowledge point learning plans
 """
 
-import json
 from typing import Any
+
+from src.utils.json_utils import parse_json_response
 
 from .base_guide_agent import BaseGuideAgent
 
@@ -91,7 +92,7 @@ class LocateAgent(BaseGuideAgent):
             )
 
             try:
-                result = json.loads(response)
+                result = parse_json_response(response)
 
                 if isinstance(result, list):
                     knowledge_points = result
@@ -124,7 +125,7 @@ class LocateAgent(BaseGuideAgent):
                     "total_points": len(validated_points),
                 }
 
-            except json.JSONDecodeError as e:
+            except (ValueError, Exception) as e:
                 return {
                     "success": False,
                     "error": f"JSON parsing failed: {e!s}",

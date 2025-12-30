@@ -12,6 +12,8 @@ from typing import Any
 
 import yaml
 
+from src.utils.json_utils import parse_json_response
+
 from .base_idea_agent import BaseIdeaAgent
 
 
@@ -102,7 +104,7 @@ class IdeaGenerationWorkflow(BaseIdeaAgent):
         self.logger.debug(f"LLM response length: {len(response)} chars")
 
         try:
-            result = json.loads(response)
+            result = parse_json_response(response)
             filtered = result.get("filtered_points", [])
 
             self.logger.info(
@@ -136,7 +138,7 @@ class IdeaGenerationWorkflow(BaseIdeaAgent):
                 "loose_filter", {"status": "complete", "filtered": len(filtered)}
             )
             return filtered
-        except json.JSONDecodeError as e:
+        except (ValueError, Exception) as e:
             self.logger.error(f"JSON decode error: {e}")
             self.logger.debug(f"Raw response: {response[:500]}...")
             await self._emit_progress("loose_filter", {"status": "error"})
@@ -173,7 +175,7 @@ class IdeaGenerationWorkflow(BaseIdeaAgent):
         self.logger.debug(f"LLM response length: {len(response)} chars")
 
         try:
-            result = json.loads(response)
+            result = parse_json_response(response)
             ideas = result.get("research_ideas", [])
             self.logger.info(f"Generated {len(ideas)} research ideas")
             # Ensure at least 5
@@ -209,7 +211,7 @@ class IdeaGenerationWorkflow(BaseIdeaAgent):
                     )
 
             return ideas[:10]  # Return at most 10
-        except json.JSONDecodeError as e:
+        except (ValueError, Exception) as e:
             self.logger.error(f"JSON decode error: {e}")
             self.logger.debug(f"Raw response: {response[:500]}...")
             return []
@@ -256,7 +258,7 @@ class IdeaGenerationWorkflow(BaseIdeaAgent):
         self.logger.debug(f"LLM response length: {len(response)} chars")
 
         try:
-            result = json.loads(response)
+            result = parse_json_response(response)
             kept = result.get("kept_ideas", [])
             rejected = result.get("rejected_ideas", [])
             reasons = result.get("reasons", {})
@@ -306,7 +308,7 @@ class IdeaGenerationWorkflow(BaseIdeaAgent):
                     )
 
             return kept
-        except json.JSONDecodeError as e:
+        except (ValueError, Exception) as e:
             self.logger.error(f"JSON decode error: {e}")
             self.logger.debug(f"Raw response: {response[:500]}...")
             # If parsing fails, at least keep the first one

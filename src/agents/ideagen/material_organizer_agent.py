@@ -9,6 +9,8 @@ from typing import Any
 
 import yaml
 
+from src.utils.json_utils import parse_json_response
+
 from .base_idea_agent import BaseIdeaAgent
 
 
@@ -91,7 +93,7 @@ class MaterialOrganizerAgent(BaseIdeaAgent):
         self.logger.debug(f"LLM response length: {len(response)} chars")
 
         try:
-            result = json.loads(response)
+            result = parse_json_response(response)
             knowledge_points = result.get("knowledge_points", [])
             self.logger.info(f"Extracted {len(knowledge_points)} knowledge points")
 
@@ -108,7 +110,7 @@ class MaterialOrganizerAgent(BaseIdeaAgent):
 
             self.logger.info(f"Validated {len(validated_points)} knowledge points")
             return validated_points
-        except json.JSONDecodeError as e:
+        except (ValueError, Exception) as e:
             self.logger.error(f"JSON decode error: {e}")
             self.logger.debug(f"Raw response: {response[:500]}...")
             return await self._fallback_extract(records, user_thoughts)
@@ -137,7 +139,7 @@ class MaterialOrganizerAgent(BaseIdeaAgent):
                 system_prompt=system_prompt,
                 response_format={"type": "json_object"},
             )
-            result = json.loads(response)
+            result = parse_json_response(response)
             knowledge_points = result.get("knowledge_points", [])
 
             validated_points = []

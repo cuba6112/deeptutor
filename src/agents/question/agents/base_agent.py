@@ -22,6 +22,7 @@ project_root = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from src.core.core import get_agent_params
+from src.utils.json_utils import parse_json_response
 from src.core.logging import get_logger
 
 # Module logger
@@ -347,7 +348,7 @@ Output JSON format:
             level="DEBUG",
         )
 
-        result = json.loads(response_content)
+        result = parse_json_response(response_content)
 
         # Record thought
         thought = result.get("thought", "")
