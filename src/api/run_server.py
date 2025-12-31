@@ -46,6 +46,9 @@ if __name__ == "__main__":
         "**/user/co-writer/**",  # Co-Writer output directory
         "**/logs/**",  # Logs directory
         "**/user/logs/**",  # User logs directory
+        "**/node_modules/**",  # Node.js dependencies
+        "**/web/**",  # Frontend directory
+        "**/.next/**",  # Next.js build output
     ]
 
     # Start uvicorn server with reload enabled

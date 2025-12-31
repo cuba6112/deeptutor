@@ -161,16 +161,27 @@ async def test_embeddings_connection():
         model = embedding_config["model"]
         api_key = embedding_config["api_key"]
         base_url = embedding_config["base_url"]
+        embedding_dim = embedding_config["dim"]
 
-        # Import embedding function
+        # Import embedding function and wrapper
         from lightrag.llm.openai import openai_embed
+        from lightrag.utils import EmbeddingFunc
+
+        # Create embedding func with correct dimension from config
+        embedding_func = EmbeddingFunc(
+            embedding_dim=embedding_dim,
+            func=lambda texts: openai_embed.func(
+                texts,
+                model=model,
+                api_key=api_key,
+                base_url=base_url,
+            ),
+        )
 
         # Send a minimal test request
         test_texts = ["test"]
-        # openai_embed returns a coroutine, so we need to await it
-        embeddings = await openai_embed(
-            texts=test_texts, model=model, api_key=api_key, base_url=base_url
-        )
+        # Use the properly configured embedding function
+        embeddings = await embedding_func(test_texts)
 
         response_time = (time.time() - start_time) * 1000
 

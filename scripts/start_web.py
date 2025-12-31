@@ -7,14 +7,21 @@ import time
 
 # Force unbuffered output for the main process
 os.environ["PYTHONUNBUFFERED"] = "1"
+os.environ["PYTHONIOENCODING"] = "utf-8"
 if hasattr(sys.stdout, "reconfigure"):
-    sys.stdout.reconfigure(line_buffering=True)
+    sys.stdout.reconfigure(line_buffering=True, encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 
 def print_flush(*args, **kwargs):
     """Print with flush=True by default"""
     kwargs.setdefault("flush", True)
-    print(*args, **kwargs)
+    try:
+        print(*args, **kwargs)
+    except UnicodeEncodeError:
+        sanitized = [str(arg).encode("ascii", "ignore").decode("ascii") for arg in args]
+        print(*sanitized, **kwargs)
 
 
 def start_backend():

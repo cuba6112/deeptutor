@@ -19,6 +19,7 @@ sys.path.insert(0, str(project_root))
 from openai import OpenAI
 
 from src.core.core import get_agent_params, get_llm_config
+from src.utils.json_utils import parse_json_response
 
 
 def load_parsed_paper(paper_dir: Path) -> tuple[str | None, list[dict] | None, Path]:
@@ -169,7 +170,7 @@ Please analyze the above exam paper content, extract all question information, a
         )
 
         result_text = response.choices[0].message.content
-        result = json.loads(result_text)
+        result = parse_json_response(result_text)
 
         questions = result.get("questions", [])
         print(f"✅ Successfully extracted {len(questions)} questions")

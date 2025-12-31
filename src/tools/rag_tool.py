@@ -202,7 +202,7 @@ async def rag_search(
     embedding_func = EmbeddingFunc(
         embedding_dim=embedding_dim,
         max_token_size=embedding_max_tokens,
-        func=lambda texts: openai_embed(
+        func=lambda texts: openai_embed.func(
             texts,
             model=embedding_model,
             api_key=embedding_api_key,

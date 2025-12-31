@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "TaskOutput",
+      "TodoWrite",
+      "NotebookEdit",
+      "AskUserQuestion",
+      "Skill",
+      "mcp__*",
+      "Bash(find:*)",
+      "Bash(curl:*)",
+      "Bash(ollama list:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix JSON parsing for Ollama models with markdown-wrapped responses\n\n- Add json_utils.py utility to extract JSON from markdown code blocks\n- Fix locate_agent.py to handle markdown-wrapped JSON responses\n- Fix idea_generation_workflow.py \\(3 occurrences\\)\n- Fix material_organizer_agent.py \\(2 occurrences\\)\n- Fix validation_workflow.py \\(3 occurrences\\)\n- Fix validation_agent.py \\(1 occurrence\\)\n- Fix generation_agent.py \\(2 occurrences\\)\n- Fix base_agent.py \\(1 occurrence\\)\n- Add RAG system documentation \\(rag.md\\)\n\nThis fixes the \"JSON parsing failed: Expecting value\" error when using\nOllama models like minimax-m2.1:cloud that wrap JSON responses in\nmarkdown code blocks \\(```json ... ```\\).\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)"
+    ]
+  }
+}

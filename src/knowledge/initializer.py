@@ -192,7 +192,7 @@ class KnowledgeBaseInitializer:
             working_dir=str(self.rag_storage_dir),
             enable_image_processing=True,
             enable_table_processing=True,
-            enable_equation_processing=True,
+            enable_equation_processing=False,
         )
 
         # Get LLM configuration from env_config
@@ -284,7 +284,7 @@ class KnowledgeBaseInitializer:
         embedding_func = EmbeddingFunc(
             embedding_dim=embedding_cfg["dim"],
             max_token_size=embedding_cfg["max_tokens"],
-            func=lambda texts: openai_embed(
+            func=lambda texts: openai_embed.func(
                 texts,
                 model=embedding_cfg["model"],
                 api_key=embedding_api_key,
@@ -322,6 +322,7 @@ class KnowledgeBaseInitializer:
                     file_path=str(doc_file),
                     output_dir=str(self.content_list_dir),
                     parse_method="auto",
+                    formula=False,  # Disabled due to UnimerMBart transformers compatibility issue
                 )
                 logger.info(f"  ✓ Successfully processed: {doc_file.name}")
 
