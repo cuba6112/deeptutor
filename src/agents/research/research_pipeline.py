@@ -59,7 +59,7 @@ from src.tools.code_executor import run_code
 from src.tools.paper_search_tool import PaperSearchTool
 from src.tools.query_item_tool import query_numbered_item
 from src.tools.rag_tool import rag_search
-from src.tools.web_search import web_search
+from src.tools.ollama_web_search import web_search_unified as web_search
 
 
 class ResearchPipeline:

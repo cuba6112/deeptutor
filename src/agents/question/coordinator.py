@@ -21,6 +21,7 @@ sys.path.insert(0, str(project_root))
 
 from src.core.logging import Logger, get_logger
 from src.tools.rag_tool import rag_search
+from src.utils.json_utils import parse_json_response
 
 
 def ensure_list(value: Any, default: list | None = None) -> list:
@@ -343,7 +344,7 @@ class AgentCoordinator:
 
         try:
             content = await self._call_llm(system_prompt=system_prompt, user_prompt=user_prompt)
-            data = json.loads(content)
+            data = parse_json_response(content)
 
             # Ensure queries is a list
             queries_raw = data.get("queries", [])
@@ -526,7 +527,7 @@ class AgentCoordinator:
         )
         try:
             content = await self._call_llm(system_prompt=system_prompt, user_prompt=user_prompt)
-            parsed = json.loads(content)
+            parsed = parse_json_response(content)
             return bool(parsed.get("relevant"))
         except Exception as e:
             self.logger.warning(f"Failed to check retrieval relevance: {e}")
@@ -550,7 +551,7 @@ class AgentCoordinator:
         )
         try:
             content = await self._call_llm(system_prompt=system_prompt, user_prompt=user_prompt)
-            parsed = json.loads(content)
+            parsed = parse_json_response(content)
 
             # Ensure requirements is a list
             requirements_raw = parsed.get("requirements", [])
@@ -582,7 +583,7 @@ class AgentCoordinator:
         user_prompt = f"Requirement:\n{requirement_text}\n\nReturn JSON only."
         try:
             content = await self._call_llm(system_prompt=system_prompt, user_prompt=user_prompt)
-            parsed = json.loads(content)
+            parsed = parse_json_response(content)
         except Exception as e:
             self.logger.warning(f"Failed to interpret requirement text: {e}")
             parsed = {}
@@ -1146,7 +1147,7 @@ class AgentCoordinator:
             content = await self._call_llm(
                 system_prompt=system_prompt, user_prompt=user_prompt, stage="plan_sub_focuses"
             )
-            parsed = json.loads(content)
+            parsed = parse_json_response(content)
             focuses = parsed.get("focuses", [])
             if not isinstance(focuses, list):
                 focuses = []
@@ -1676,7 +1677,7 @@ class AgentCoordinator:
             content = await self._call_llm(
                 system_prompt=system_prompt, user_prompt=user_prompt, stage="generate_question_plan"
             )
-            parsed = json.loads(content)
+            parsed = parse_json_response(content)
             focuses = parsed.get("focuses", [])
             if not isinstance(focuses, list):
                 focuses = []
@@ -1876,7 +1877,7 @@ class AgentCoordinator:
                 user_prompt=user_prompt,
                 stage=f"generate_question_{question_id}",
             )
-            question = json.loads(content)
+            question = parse_json_response(content)
             question["knowledge_point"] = knowledge_point
             return {
                 "success": True,
