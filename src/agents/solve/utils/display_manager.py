@@ -35,13 +35,8 @@ class DisplayManager:
 
     def __init__(self):
         self.rich_available = RICH_AVAILABLE
-        if not self.rich_available:
-            return
 
-        # Explicitly use raw stdout, bypass logger redirection
-        self.console = Console(file=sys.__stdout__)
-
-        # Status data
+        # Always initialize agents_status (needed even without rich)
         self.agents_status = {
             "InvestigateAgent": "pending",
             "NoteAgent": "pending",
@@ -51,6 +46,12 @@ class DisplayManager:
             "ResponseAgent": "pending",
             "PrecisionAnswerAgent": "pending",
         }
+
+        if not self.rich_available:
+            return
+
+        # Explicitly use raw stdout, bypass logger redirection
+        self.console = Console(file=sys.__stdout__)
 
         self.stats = {
             "model": "Unknown",
